@@ -23,6 +23,8 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 
+import { unescape } from 'lodash';
+
 const colors = {
     defaultBackgroundColor: '#EEEEEE',
 };
@@ -89,6 +91,12 @@ export default class OpenGraphDisplay extends Component {
         );
     };
 
+    unescape = (content) => unescape(
+        content.replace(/&#([0-9]{1,3});/gi, (match, numStr) => (
+            String.fromCharCode(Number(numStr))
+        ))
+    );
+
     render() {
         if (!this.props.data.url) {
             return null;
@@ -110,9 +118,9 @@ export default class OpenGraphDisplay extends Component {
                             /> : null
                         }
                         <View style={styles.textContent}>
-                            <Text style={styles.title}>{this.props.data.title || ''}</Text>
-                            <Text>{this.props.data.description || ''}</Text>
-                            <Text>{this.props.data.url || ''}</Text>
+                            <Text style={styles.title}>{this.unescape(this.props.data.title) || ''}</Text>
+                            <Text>{this.unescape(this.props.data.description) || ''}</Text>
+                            <Text>{this.unescape(this.props.data.url) || ''}</Text>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
