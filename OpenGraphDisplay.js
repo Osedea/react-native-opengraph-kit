@@ -91,11 +91,17 @@ export default class OpenGraphDisplay extends Component {
         );
     };
 
-    unescape = (content) => unescape(
-        content.replace(/&#([0-9]{1,3});/gi, (match, numStr) => (
-            String.fromCharCode(Number(numStr))
-        ))
-    );
+    unescape = (content) => {
+        if (!content) {
+            return '';
+        }
+
+        return unescape(
+            content.replace(/&#([0-9]{1,3});/gi, (match, numStr) => (
+                String.fromCharCode(Number(numStr))
+            ))
+        );
+    }
 
     render() {
         if (!this.props.data.url) {
