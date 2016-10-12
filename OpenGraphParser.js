@@ -1,5 +1,5 @@
 function parseMeta(html) {
-    const metaTagRegex = /<meta property="og:.*/gi;
+    const metaTagRegex = /<meta.*property=[ '"]*og:.*/gi;
     const meta = {
         url: '',
     };
@@ -14,23 +14,27 @@ function parseMeta(html) {
             } else {
                 break;
             }
+
+            if (metaName.length > 1) {
+                metaName = metaName[0];
+            } else {
+                metaName = metaName[0].split("'");
+            }
+
             if (metaName.length > 1) {
                 metaName = metaName[0];
             } else {
                 break;
             }
-            let metaValue = matches[i].split('content="');
+
+            let metaValue = matches[i].split('content=');
 
             if (metaValue.length > 1) {
-                metaValue = metaValue[1].split('"');
+                metaValue = metaValue[1].split(metaValue[1].trim()[0])[1];
             } else {
                 break;
             }
-            if (metaValue.length > 1) {
-                metaValue = metaValue[0];
-            } else {
-                break;
-            }
+
             meta[metaName] = metaValue;
         }
     }
