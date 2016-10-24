@@ -1,3 +1,5 @@
+import decodeHTMLChars from './decodeHTMLChars';
+
 function parseMeta(html) {
     const metaTagRegex = /<meta.*property=[ '"]*og:.*/gi;
     const meta = {
@@ -19,12 +21,12 @@ function parseMeta(html) {
                 metaName = metaName[0];
             } else {
                 metaName = metaName[0].split("'");
-            }
 
-            if (metaName.length > 1) {
-                metaName = metaName[0];
-            } else {
-                break;
+                if (metaName.length > 1) {
+                    metaName = metaName[0];
+                } else {
+                    break;
+                }
             }
 
             let metaValue = matches[i].split('content=');
@@ -35,7 +37,7 @@ function parseMeta(html) {
                 break;
             }
 
-            meta[metaName] = metaValue;
+            meta[metaName] = decodeHTMLChars(metaValue);
         }
     }
 
