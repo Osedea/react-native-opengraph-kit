@@ -166,7 +166,7 @@ export default class OpenGraphDisplay extends Component {
                                     this.props.urlStyle,
                                 ]}
                             >
-                                {this.unescape(this.props.data.url) || ''}
+                                {this.unescape(this.props.data.url) ? this.unescape(this.props.data.url).toLowerCase() : ''}
                             </Text>
                         </View>
                     </View>
@@ -189,7 +189,7 @@ export default class OpenGraphDisplay extends Component {
                                 this.props.urlStyle,
                             ]}
                         >
-                            {this.unescape(this.props.data.url) || ''}
+                                {this.unescape(this.props.data.url) ? this.unescape(this.props.data.url).toLowerCase() : ''}
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
