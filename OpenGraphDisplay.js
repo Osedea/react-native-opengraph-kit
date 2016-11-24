@@ -69,6 +69,13 @@ const styles = StyleSheet.create({
 
 export default class OpenGraphDisplay extends Component {
     static propTypes = {
+        containerStyle: View.propTypes.style,
+        imageStyle: Image.propTypes.style,
+        textContainerStyle: View.propTypes.style,
+        titleStyle: Text.propTypes.style,
+        descriptionStyle: Text.propTypes.style,
+        urlStyle: Text.propTypes.style,
+        urlOnlyContainerStyle: View.propTypes.style,
         data: React.PropTypes.shape({
             url: React.PropTypes.string,
             image: React.PropTypes.string,
@@ -116,17 +123,51 @@ export default class OpenGraphDisplay extends Component {
                 <TouchableWithoutFeedback
                     onPress={this.handleLinkPress}
                 >
-                    <View style={styles.container}>
+                    <View
+                        style={[
+                            styles.container,
+                            this.props.containerStyle,
+                        ]}
+                    >
                         {this.props.data.image ?
                             <Image
-                                style={styles.image}
+                                style={[
+                                    styles.image,
+                                    this.props.imageStyle,
+                                ]}
                                 source={{ uri: this.props.data.image }}
                             /> : null
                         }
-                        <View style={styles.textContent}>
-                            <Text style={styles.title}>{this.unescape(this.props.data.title) || ''}</Text>
-                            <Text>{this.unescape(this.props.data.description) || ''}</Text>
-                            <Text>{this.unescape(this.props.data.url) || ''}</Text>
+                        <View
+                            style={[
+                                styles.textContent,
+                                this.props.textContainerStyle,
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.title,
+                                    this.props.titleStyle,
+                                ]}
+                            >
+                                {this.unescape(this.props.data.title) || ''}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.description,
+                                    this.props.descriptionStyle,
+                                ]}
+                            >
+                                {this.unescape(this.props.data.description) || ''}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.url,
+                                    this.props.urlStyle,
+                                ]}
+                            >
+                                {this.unescape(this.props.data.url) || ''}
+                            </Text>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
@@ -136,8 +177,20 @@ export default class OpenGraphDisplay extends Component {
                 <TouchableWithoutFeedback
                     onPress={this.handleLinkPress}
                 >
-                    <View style={styles.smallContainer}>
-                        <Text>{this.props.data.url || ''}</Text>
+                    <View
+                        style={[
+                            styles.smallContainer,
+                            this.props.urlOnlyContainerStyle,
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.url,
+                                this.props.urlStyle,
+                            ]}
+                        >
+                            {this.unescape(this.props.data.url) || ''}
+                        </Text>
                     </View>
                 </TouchableWithoutFeedback>
             );
