@@ -46,9 +46,11 @@ function parseMeta(html, url) {
 
             meta[metaName] = decodeHTMLChars(metaValue);
         }
-    }
 
-    return meta;
+        return meta;
+    } else {
+        return null;
+    }
 }
 
 async function fetchHtml(urlToFetch) {
