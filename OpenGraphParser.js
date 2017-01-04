@@ -103,8 +103,6 @@ async function extractMeta(textContent = '') {
     try {
         const urls = getUrls(textContent);
 
-        console.log('Extracted urls', urls);
-
         let metaData = null;
         let i = 0;
 
