@@ -1,7 +1,7 @@
 import decodeHTMLChars from './decodeHTMLChars';
 
 function parseMeta(html, url) {
-    const metaTagRegex = /<meta.*property=[ '"]*og:.*/gi;
+    const metaTagRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*content=['"]([^'"]*)['"][^>]*>/gi;
     const meta = {
         url: url,
     };
