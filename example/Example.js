@@ -36,6 +36,7 @@ export default class Example extends Component {
     handleTextChange = (event) => {
         OpenGraphParser.extractMeta(event.nativeEvent.text)
         .then((data) => {
+            console.log(data);
             this.setState({ data });
         })
         .catch((error) => {

@@ -23,8 +23,6 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 
-import { unescape } from 'lodash';
-
 const colors = {
     defaultBackgroundColor: '#EEEEEE',
 };
@@ -98,20 +96,8 @@ export default class OpenGraphDisplay extends Component {
         );
     };
 
-    unescape = (content) => {
-        if (!content) {
-            return '';
-        }
-
-        return unescape(
-            content.replace(/&#([0-9]{1,3});/gi, (match, numStr) => (
-                String.fromCharCode(Number(numStr))
-            ))
-        );
-    }
-
     render() {
-        if (!this.props.data.url) {
+        if (!this.props.data || !this.props.data.url) {
             return null;
         }
 
@@ -150,7 +136,7 @@ export default class OpenGraphDisplay extends Component {
                                     this.props.titleStyle,
                                 ]}
                             >
-                                {this.unescape(this.props.data.title) || ''}
+                                {this.props.data.title || ''}
                             </Text>
                             <Text
                                 style={[
@@ -158,7 +144,7 @@ export default class OpenGraphDisplay extends Component {
                                     this.props.descriptionStyle,
                                 ]}
                             >
-                                {this.unescape(this.props.data.description) || ''}
+                                {this.props.data.description || ''}
                             </Text>
                             <Text
                                 style={[
@@ -166,7 +152,7 @@ export default class OpenGraphDisplay extends Component {
                                     this.props.urlStyle,
                                 ]}
                             >
-                                {this.unescape(this.props.data.url) ? this.unescape(this.props.data.url).toLowerCase() : ''}
+                                {this.props.data.url ? this.props.data.url.toLowerCase() : ''}
                             </Text>
                         </View>
                     </View>
@@ -189,7 +175,7 @@ export default class OpenGraphDisplay extends Component {
                                 this.props.urlStyle,
                             ]}
                         >
-                                {this.unescape(this.props.data.url) ? this.unescape(this.props.data.url).toLowerCase() : ''}
+                                {this.props.data.url ? this.props.data.url.toLowerCase() : ''}
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>

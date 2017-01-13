@@ -1,38 +1,41 @@
-import decodeHTMLChars from './decodeHTMLChars';
+import { AllHtmlEntities } from 'html-entities';
 
-function parseMeta(html, url) {
-    const metaTagRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*content=['"]([^'"]*)['"][^>]*>/gi;
-    const meta = {
-        url: url,
-    };
-    const matches = html.match(metaTagRegex);
+const entities = new AllHtmlEntities();
+
+function parseMeta(html, url, options) {
+    const metaTagOGRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*content=['"]([^'"]*)['"][^>]*>/gi;
+    const metaPropertyRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*>/i;
+    const metaContentRegex = /<meta[^>]*content=[ '"]([^'"]*)[^>]*>/i;
+    const meta = { url };
+
+    const matches = html.match(metaTagOGRegex);
 
     if (matches) {
         for (let i = matches.length; i--;) {
-            let metaName = matches[i].split('og:');
+            let metaName;
+            let metaValue;
 
-            if (metaName.length > 1) {
-                metaName = metaName[1].split('"');
-            } else {
-                break;
-            }
+            try {
+                const propertyMatch = metaPropertyRegex.exec(matches[i]);
+                const contentMatch = metaContentRegex.exec(matches[i]);
+                metaName = propertyMatch[1].trim();
+                metaValue = contentMatch[1].trim();
 
-            if (metaName.length > 1) {
-                metaName = metaName[0];
-            } else {
-                metaName = metaName[0].split("'");
-
-                if (metaName.length > 1) {
-                    metaName = metaName[0];
-                } else {
-                    break;
+                if (!metaName || !metaValue) {
+                    continue;
                 }
+            } catch (error) {
+                if (__DEV__) {
+                    console.log('Error on ', matches[i]);
+                    console.log('propertyMatch', propertyMatch);
+                    console.log('contentMatch', contentMatch);
+                    console.log(error);
+                }
+
+                continue;
             }
 
-            let metaValue = matches[i].split('content=');
-
-            if (metaValue.length > 1) {
-                metaValue = metaValue[1].split(metaValue[1].trim()[0])[1];
+            if (metaValue.length > 0) {
                 if (metaValue[0] === '/') {
                     if (url[url.length - 1] === '/') {
                         metaValue = url + metaValue.substring(1);
@@ -41,10 +44,20 @@ function parseMeta(html, url) {
                     }
                 }
             } else {
-                break;
+                continue;
             }
 
-            meta[metaName] = decodeHTMLChars(metaValue);
+            meta[metaName] = entities.decode(metaValue);
+        }
+
+        if (options.fallbackOnHTMLTags) {
+            try {
+                fallbackOnHTMLTags(html, meta);
+            } catch (error) {
+                if (__DEV__) {
+                    console.log('Error in fallback', error);
+                }
+            }
         }
 
         return meta;
@@ -53,11 +66,46 @@ function parseMeta(html, url) {
     }
 }
 
+function fallbackOnHTMLTags(htmlContent, metaDataObject) {
+    if (!metaDataObject.description) {
+        const descriptionMetaTagRegex = /<meta[^>]*name=[ '"]*description[^'"]* [^>]*content=['"]([^'"]*)['"][^>]*>/gi;
+        const descriptionMatches = htmlContent.match(descriptionMetaTagRegex);
+
+        if (descriptionMatches && descriptionMatches.length > 0) {
+            const descriptionContentRegex = /<meta[^>]*name=[ '"]*description[^'"]* [^>]*content=['"]([^'"]*)['"][^>]*>/i;
+            const descriptionMatch = descriptionContentRegex.exec(descriptionMatches[0]);
+
+            if (descriptionMatch) {
+                metaDataObject.description = descriptionMatch[1].trim();
+            }
+        }
+    }
+
+    if (!metaDataObject.title) {
+        const titleMetaTagRegex = /<title>([^<]*)<\/title>/gi;
+        const titleMatches = htmlContent.match(titleMetaTagRegex);
+
+        if (titleMatches && titleMatches.length > 0) {
+            const titleContentRegex = /<title>([^<]*)<\/title>/i;
+            const titleMatch = titleContentRegex.exec(titleMatches[0]);
+
+            if (titleMatch) {
+                metaDataObject.title = titleMatch[1].trim();
+            }
+        }
+    }
+}
+
 async function fetchHtml(urlToFetch) {
     let result;
 
     try {
-        result = await fetch(urlToFetch);
+        result = await fetch(urlToFetch, {
+            method: 'GET',
+            headers: {
+                "user-agent": 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+            },
+        });
 
         if (result.status >= 400) {
             throw result;
@@ -66,14 +114,20 @@ async function fetchHtml(urlToFetch) {
         return result.text()
         .then((resultParsed) => (resultParsed));
     } catch (responseOrError) {
-        if (responseOrError.message) {
-            console.log(responseOrError);
+        if (responseOrError.message && __DEV__) {
+            if (responseOrError.message === 'Network request failed') {
+                console.log(urlToFetch, 'could not be fetched');
+            } else {
+                console.log(responseOrError);
+            }
             return null;
         }
 
         return responseOrError.text()
         .then((error) => {
-            console.log('An error has occured while fetching url content', error);
+            if (__DEV__) {
+                console.log('An error has occured while fetching url content', error);
+            }
             return null;
         });
     }
@@ -92,14 +146,16 @@ function getUrls(contentToMatch) {
                 urlsToReturn.push(`http://${url}`);
             }
         });
-
-        return urlsToReturn;
     } else {
-        throw new Error('Could not find an html link');
+        if (__DEV__) {
+            console.log('Could not find an html link');
+        }
     }
+
+    return urlsToReturn;
 }
 
-async function extractMeta(textContent = '') {
+async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: true }) {
     try {
         const urls = getUrls(textContent);
 
@@ -110,7 +166,7 @@ async function extractMeta(textContent = '') {
             metaData = await fetchHtml(urls[i])
                 .then(
                     (html) => ({
-                        ...parseMeta(html, urls[i]),
+                        ...html ? parseMeta(html, urls[i], options) : {},
                         url: urls[i],
                     })
                 );
