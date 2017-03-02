@@ -59,10 +59,11 @@ data | React.PropTypes.shape({ <br>    url: React.PropTypes.string, <br>    imag
 containerStyle | View.propTypes.style | A style to pass to customize the style of the container
 imageStyle | Image.propTypes.style | A style to pass to customize the style of the image
 textContainerStyle | View.propTypes.style | A style to pass to customize the style of the textContainer
+touchContainerStyle | View.propTypes.style | A style to pass to customize the style of the View that is touchable when the content is "rich" (as opposed to `urlOnlyTouchContainerStyle`)
 titleStyle | Text.propTypes.style | A style to pass to customize the style of the title
 descriptionStyle | Text.propTypes.style | A style to pass to customize the style of the description
 urlStyle | Text.propTypes.style | A style to pass to customize the style of the url
-urlOnlyContainerStyle | View.propTypes.style | A style to pass to customize the style of the urlOnlyContainer
+urlOnlyTouchContainerStyle | View.propTypes.style | A style to pass to customize the style of the View that is touchable when the content is "poor" (Just the url, no info has been successfully fetched)
 onIconPress | React.PropTypes.func | When this function is provided, puts an Icon on the right of the OpenGraphDisplay (by default an `x`)
 iconSource | Image.propTypes.source | The Image Source to use as Icon
 iconStyle | Image.propTypes.style | The style of the Icon

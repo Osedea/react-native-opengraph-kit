@@ -93,9 +93,11 @@ export default class OpenGraphDisplay extends Component {
         imageStyle: Image.propTypes.style,
         onIconPress: React.PropTypes.func,
         textContainerStyle: View.propTypes.style,
+        touchContainerStyle: View.propTypes.style,
         titleStyle: Text.propTypes.style,
         urlStyle: Text.propTypes.style,
         urlOnlyContainerStyle: View.propTypes.style,
+        urlOnlyTouchContainerStyle: View.propTypes.style,
     };
 
     static defaultProps = {
@@ -134,7 +136,7 @@ export default class OpenGraphDisplay extends Component {
                     <View
                         style={[
                             styles.container,
-                            this.props.containerStyle,
+                            this.props.touchContainerStyle,
                         ]}
                     >
                         {this.props.data.image ?
@@ -188,7 +190,7 @@ export default class OpenGraphDisplay extends Component {
                     <View
                         style={[
                             styles.smallContainer,
-                            this.props.urlOnlyContainerStyle,
+                            this.props.urlOnlyTouchContainerStyle,
                         ]}
                     >
                         <Text
@@ -205,7 +207,12 @@ export default class OpenGraphDisplay extends Component {
         }
 
         return (
-            <View style={styles.opengraphWithIcon}>
+            <View
+                style={[
+                    styles.opengraphWithIcon,
+                    this.props.containerStyle,
+                ]}
+            >
                 {opengraph}
                 {this.props.onIconPress
                     ? <TouchableWithoutFeedback
