@@ -33,6 +33,10 @@ export default class Example extends Component {
         };
     }
 
+    handleIconPress = () => {
+        console.log('Pressed X');
+    }
+
     handleTextChange = (event) => {
         OpenGraphParser.extractMeta(event.nativeEvent.text)
         .then((data) => {
@@ -49,6 +53,7 @@ export default class Example extends Component {
             <View style={styles.container}>
                 <Text style={styles.title}>OpenGraphAwareInput</Text>
                 <OpenGraphAwareInput
+                    showIcon
                     containerStyle={styles.textInput}
                 />
                 <Text style={styles.title}>Using OpenGraphParser with normal TextInput</Text>

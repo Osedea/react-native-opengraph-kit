@@ -38,6 +38,10 @@ Property Name | Type | Description
 containerStyle | View.propTypes.style | A style to pass to customize the style of the container
 onChange | React.PropTypes.func | The function to call on change in the TextInput
 textInputStyle | TextInput.propTypes.style | A style to pass to customize the style of the textInput
+onIconPress | React.PropTypes.func | A function to call when the Icon is pressed (see `OpenGraphDisplay`). By default, the function clear the `opengraphdata` field returned (and therefore the resulting `OpenGraphDisplay`).
+iconSource | Image.propTypes.source | The Image Source to use as Icon (see `OpenGraphDisplay`)
+iconStyle | Image.propTypes.style | The style of the Icon (see `OpenGraphDisplay`)
+showIcon | React.PropTypes.bool | Should we show the Icon or not? (default is `false`)
 
 ## OpenGraphDisplay
 
@@ -59,6 +63,9 @@ titleStyle | Text.propTypes.style | A style to pass to customize the style of th
 descriptionStyle | Text.propTypes.style | A style to pass to customize the style of the description
 urlStyle | Text.propTypes.style | A style to pass to customize the style of the url
 urlOnlyContainerStyle | View.propTypes.style | A style to pass to customize the style of the urlOnlyContainer
+onIconPress | React.PropTypes.func | When this function is provided, puts an Icon on the right of the OpenGraphDisplay (by default an `x`)
+iconSource | Image.propTypes.source | The Image Source to use as Icon
+iconStyle | Image.propTypes.style | The style of the Icon
 
 ## OpenGraphParser
 

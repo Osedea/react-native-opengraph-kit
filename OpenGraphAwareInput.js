@@ -21,12 +21,17 @@ export default class OpenGraphAwareInput extends Component {
     static propTypes = {
         containerStyle: View.propTypes.style,
         debounceDelay: React.PropTypes.number,
+        iconSource: OpenGraphDisplay.propTypes.iconSource,
+        iconStyle: OpenGraphDisplay.propTypes.iconStyle,
         onChange: React.PropTypes.func,
+        onIconPress: React.PropTypes.func,
+        showIcon: React.PropTypes.bool,
         textInputStyle: TextInput.propTypes.style,
     };
 
     static defaultProps = {
         debounceDelay: 300,
+        showIcon: false,
     };
 
     constructor(props) {
@@ -35,6 +40,12 @@ export default class OpenGraphAwareInput extends Component {
         this.state = {
             openGraphData: {},
         };
+    }
+
+    handleDismissOpengraph = () => {
+        this.setState({
+            openGraphData: {},
+        });
     }
 
     extractMetaAndSetState = debounce(
@@ -80,7 +91,15 @@ export default class OpenGraphAwareInput extends Component {
                         this.props.textInputStyle,
                     ]}
                 />
-                <OpenGraphDisplay data={this.state.openGraphData} />
+                <OpenGraphDisplay
+                    data={this.state.openGraphData}
+                    onIconPress={this.props.showIcon
+                        ? this.props.onIconPress || this.handleDismissOpengraph
+                        : null
+                    }
+                    iconSource={this.props.iconSource}
+                    iconStyle={this.props.iconStyle}
+                />
             </View>
         );
     }
