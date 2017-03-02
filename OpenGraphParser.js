@@ -3,9 +3,9 @@ import { AllHtmlEntities } from 'html-entities';
 const entities = new AllHtmlEntities();
 
 function parseMeta(html, url, options) {
-    const metaTagOGRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*content=['"]([^'"]*)['"][^>]*>/gi;
-    const metaPropertyRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*>/i;
-    const metaContentRegex = /<meta[^>]*content=[ '"]([^'"]*)[^>]*>/i;
+    const metaTagOGRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*content=["]([^"]*)["][^>]*>/gi;
+    const metaPropertyRegex = /<meta[^>]*property=[ "]*og:([^"]*)[^>]*>/i;
+    const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
     const meta = { url };
 
     const matches = html.match(metaTagOGRegex);

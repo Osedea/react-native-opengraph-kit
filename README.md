@@ -3,6 +3,20 @@ A set of components and utils useful to extract opengraph data directly from you
 
 For react-native v0.26+
 
+# Prerequesites
+
+Be sure to have in your `Info.plist`
+
+```
+<key>NSAppTransportSecurity</key>
+<!--See http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/ -->
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    ...
+</dict>
+```
+
 # Subcomponents
 
 ```
