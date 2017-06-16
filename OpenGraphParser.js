@@ -36,7 +36,7 @@ function parseMeta(html, url, options) {
             }
 
             if (metaValue.length > 0) {
-                if (metaValue[0] === '/') {
+                if (metaValue[0] === '/' && (metaValue.length <= 1 || metaValue[1] !== '/')) {
                     if (url[url.length - 1] === '/') {
                         metaValue = url + metaValue.substring(1);
                     } else {
