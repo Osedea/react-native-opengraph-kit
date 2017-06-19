@@ -37,10 +37,20 @@ function parseMeta(html, url, options) {
 
             if (metaValue.length > 0) {
                 if (metaValue[0] === '/') {
-                    if (url[url.length - 1] === '/') {
-                        metaValue = url + metaValue.substring(1);
+                    if (metaValue.length <= 1 || metaValue[1] !== '/') {
+                        if (url[url.length - 1] === '/') {
+                            metaValue = url + metaValue.substring(1);
+                        } else {
+                            metaValue = url + metaValue;
+                        }
                     } else {
-                        metaValue = url + metaValue;
+                        // handle protocol agnostic meta URLs
+                        if (url.indexOf('https://') === 0) {
+                            metaValue = `https:${metaValue}`;
+                        }
+                        else if (url.indexOf('http://') === 0) {
+                            metaValue = `http:${metaValue}`;
+                        }
                     }
                 }
             } else {
