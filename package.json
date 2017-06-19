@@ -3,12 +3,8 @@
   "version": "1.5.0",
   "description": "A set of components and utils useful to extract opengraph data directly from your react-native app",
   "main": "index.js",
-  "devDependencies": {
-    "react": "15.0.2",
-    "react-native": "0.26.2"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-core/register --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -29,5 +25,17 @@
   "dependencies": {
     "html-entities": "~1.2.0",
     "lodash.debounce": "~4.0.8"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-react-native": "^2.0.0",
+    "chai": "^4.0.2",
+    "isomorphic-fetch": "^2.2.1",
+    "mocha": "^3.4.2",
+    "react": "15.0.2",
+    "react-native": "0.26.2"
   }
 }
