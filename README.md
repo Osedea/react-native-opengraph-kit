@@ -1,4 +1,7 @@
 # react-native-opengraph-kit
+
+![](https://travis-ci.org/Osedea/react-native-opengraph-kit.svg?branch=master)
+
 A set of components and utils useful to extract opengraph data directly from your react-native app, with almost no dependency.
 
 For react-native v0.26+
