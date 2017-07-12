@@ -40,7 +40,7 @@ const urls = [
         url: 'http://cn.timesofisrael.com/',
         name: 'a non latin character website',
         expected: {
-            description: undefined,
+            description: '以色列时报全面报道以色列高科技、创新、商业、社会文化及中以合作最新动态。',
             image: 'http://cdn.timesofisrael.com/images/facebook_toi_300.jpg',
             title: '以色列时报 | 全面报道以色列高科技、创新、商业与社会',
             url: 'http://cn.timesofisrael.com/',
@@ -96,21 +96,95 @@ const urls = [
             url: 'http://www.bbc.co.uk/news',
         }
     },
+    {
+        url: 'http://google.com',
+        name: 'Google',
+        expected: {
+            description: 'something',
+            image: 'something',
+            title: 'Google',
+            url: 'http://google.com',
+        },
+    }
 ];
 
 const parser = require('../OpenGraphParser');
 
-describe('Parser', function() {
-    urls.forEach(function (item) {
-        it(`should parse ${item.name} correctly`, function() {
-            this.timeout(15000);
+const __DEV__ = true;
 
-            return parser.extractMeta(item.url)
-            .then((meta) => {
-                expect(meta.description).to.equal(item.expected.description);
-                expect(meta.image).to.equal(item.expected.image);
-                expect(meta.title).to.equal(item.expected.title);
-                expect(meta.url).to.equal(item.expected.url);
+describe('Parser', function() {
+    describe('findOGTags', function () {
+        const simpleOGTag = '<meta property="og:title" content="test title" />';
+        const expectedSimpleOGTag = { title: 'test title' };
+        const simpleOGTagReversed = '<meta content="test title" property="og:title" />';
+        const simpleOGTagWithMore = '<meta name="thing" class="weird" property="og:title" content="test title" />';
+        const severalOGTagsInOne = '<meta name="thing" class="weird" property="og:title" content="test title" /><meta name="thing" class="weird" property="og:description" content="test description" />';
+        const expectedSeveralOGTags = { title: 'test title', description: 'test description' };
+        const severalOGTagsInOneReversed = '<meta name="thing" class="weird" content="test title" property="og:title" /><meta name="thing" content="test description" class="weird" property="og:description" />';
+
+        it('should find meta info in a valid og:tag', function() {
+            expect(parser.findOGTags(simpleOGTag)).to.deep.equal(expectedSimpleOGTag);
+        });
+        it('should find meta info in a reversed og:tag', function() {
+            expect(parser.findOGTags(simpleOGTag)).to.deep.equal(expectedSimpleOGTag);
+        });
+        it('should find meta info in a og:tag with weird extra attributes', function() {
+            expect(parser.findOGTags(simpleOGTag)).to.deep.equal(expectedSimpleOGTag);
+        });
+        it('should find meta info in a several og:tags on the same line', function() {
+            expect(parser.findOGTags(severalOGTagsInOne)).to.deep.equal(expectedSeveralOGTags);
+        });
+        it('should find meta info in a several og:tags on the same line, even if attributes are reversed', function() {
+            expect(parser.findOGTags(severalOGTagsInOneReversed)).to.deep.equal(expectedSeveralOGTags);
+        });
+    });
+    describe('findHTMLMetaTags', function () {
+        const simpleMetaTag = '<meta name="title" content="test title" />';
+        const expectedSimpleMetaTag = { title: 'test title' };
+        const simpleMetaTagReversed = '<meta content="test title" name="title" />';
+        const simpleMetaTagWithMore = '<meta class="weird" name="title" stuff="thing" content="test title" />';
+        const severalMetaTagsInOne = '<meta class="weird" name="title" content="test title" /><meta stuff="thing" class="weird" name="description" content="test description" />';
+        const expectedSeveralMetaTags = { title: 'test title', description: 'test description' };
+        const severalMetaTagsInOneReversed = '<meta name="title" class="weird" content="test title" /><meta stuff="thing" content="test description" class="weird" name="description" />';
+
+        it('should find meta info in a valid meta tags', function() {
+            expect(parser.findHTMLMetaTags(simpleMetaTag)).to.deep.equal(expectedSimpleMetaTag);
+        });
+        it('should find meta info in a reversed meta tags', function() {
+            expect(parser.findHTMLMetaTags(simpleMetaTag)).to.deep.equal(expectedSimpleMetaTag);
+        });
+        it('should find meta info in a meta tags with weird extra attributes', function() {
+            expect(parser.findHTMLMetaTags(simpleMetaTag)).to.deep.equal(expectedSimpleMetaTag);
+        });
+        it('should find meta info in a several meta tagss on the same line', function() {
+            expect(parser.findHTMLMetaTags(severalMetaTagsInOne)).to.deep.equal(expectedSeveralMetaTags);
+        });
+        it('should find meta info in a several meta tags on the same line, even if attributes are reversed', function() {
+            expect(parser.findHTMLMetaTags(severalMetaTagsInOneReversed)).to.deep.equal(expectedSeveralMetaTags);
+        });
+    });
+    describe('extractMeta', function () {
+        urls.forEach(function (item) {
+            it(`should parse ${item.name} correctly`, function() {
+                this.timeout(15000);
+
+                return parser.extractMeta(item.url)
+                .then((meta) => {
+                    const propsToCheck = [
+                        'description',
+                        'image',
+                        'title',
+                        'url',
+                    ]
+
+                    propsToCheck.forEach((prop) => {
+                        if (item.expected.description === 'something') {
+                            expect(meta[prop]).to.not.be.undefined;
+                        } else {
+                            expect(meta[prop]).to.equal(item.expected[prop]);
+                        }
+                    });
+                });
             });
         });
     });
