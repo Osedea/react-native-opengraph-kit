@@ -2,15 +2,15 @@ import { AllHtmlEntities } from 'html-entities';
 
 const entities = new AllHtmlEntities();
 
-function parseMeta(html, url, options) {
-    const metaTagOGRegex = /<meta[^>]*property=[ '"]*og:([^'"]*)[^>]*content=["]([^"]*)["][^>]*>/gi;
-    const metaPropertyRegex = /<meta[^>]*property=[ "]*og:([^"]*)[^>]*>/i;
-    const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
-    const meta = { url };
-
-    const matches = html.match(metaTagOGRegex);
+function findOGTags(content, url) {
+    const metaTagOGRegex = /<meta[^>]*(?:property=[ '"]*og:([^'"]*))?[^>]*(?:content=["]([^"]*)["])?[^>]*>/gi;
+    const matches = content.match(metaTagOGRegex);
+    let meta = {};
 
     if (matches) {
+        const metaPropertyRegex = /<meta[^>]*property=[ "]*og:([^"]*)[^>]*>/i;
+        const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
+
         for (let i = matches.length; i--;) {
             let metaName;
             let metaValue;
@@ -18,6 +18,78 @@ function parseMeta(html, url, options) {
             try {
                 const propertyMatch = metaPropertyRegex.exec(matches[i]);
                 const contentMatch = metaContentRegex.exec(matches[i]);
+
+                if (!propertyMatch || !contentMatch) {
+                    continue;
+                }
+
+                metaName = propertyMatch[1].trim();
+                metaValue = contentMatch[1].trim();
+
+                if (!metaName || !metaValue) {
+                    continue;
+                }
+            } catch (error) {
+                if (__DEV__) {
+                    console.log('Error on ', matches[i]);
+                    console.log('propertyMatch', propertyMatch);
+                    console.log('contentMatch', contentMatch);
+                    console.log(error);
+                }
+
+                continue;
+            }
+
+            if (metaValue.length > 0) {
+                if (metaValue[0] === '/') {
+                    if (metaValue.length <= 1 || metaValue[1] !== '/') {
+                        if (url[url.length - 1] === '/') {
+                            metaValue = url + metaValue.substring(1);
+                        } else {
+                            metaValue = url + metaValue;
+                        }
+                    } else {
+                        // handle protocol agnostic meta URLs
+                        if (url.indexOf('https://') === 0) {
+                            metaValue = `https:${metaValue}`;
+                        }
+                        else if (url.indexOf('http://') === 0) {
+                            metaValue = `http:${metaValue}`;
+                        }
+                    }
+                }
+            } else {
+                continue;
+            }
+
+            meta[metaName] = entities.decode(metaValue);
+        }
+    }
+
+    return meta;
+}
+
+function findHTMLMetaTags(content, url) {
+    const metaTagHTMLRegex = /<meta(?:[^>]*name=[ '"]([^'"]*))?[^>]*(?:[^>]*content=["]([^"]*)["])?[^>]*>/gi;
+    const matches = content.match(metaTagHTMLRegex);
+    let meta = {};
+
+    if (matches) {
+        const metaPropertyRegex = /<meta[^>]*name=[ "]([^"]*)[^>]*>/i;
+        const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
+
+        for (let i = matches.length; i--;) {
+            let metaName;
+            let metaValue;
+
+            try {
+                const propertyMatch = metaPropertyRegex.exec(matches[i]);
+                const contentMatch = metaContentRegex.exec(matches[i]);
+
+                if (!propertyMatch || !contentMatch) {
+                    continue;
+                }
+
                 metaName = propertyMatch[1].trim();
                 metaValue = contentMatch[1].trim();
 
@@ -60,60 +132,52 @@ function parseMeta(html, url, options) {
             meta[metaName] = entities.decode(metaValue);
         }
 
-        if (options.fallbackOnHTMLTags) {
-            try {
-                fallbackOnHTMLTags(html, meta);
-            } catch (error) {
-                if (__DEV__) {
-                    console.log('Error in fallback', error);
-                }
-            }
-        }
-
-        return meta;
-    } else {
-        return null;
-    }
-}
-
-function fallbackOnHTMLTags(htmlContent, metaDataObject) {
-    if (!metaDataObject.description) {
-        const descriptionMetaTagRegex = /<meta[^>]*name=[ '"]*description[^'"]* [^>]*content=['"]([^'"]*)['"][^>]*>/gi;
-        const descriptionMatches = htmlContent.match(descriptionMetaTagRegex);
-
-        if (descriptionMatches && descriptionMatches.length > 0) {
-            const descriptionContentRegex = /<meta[^>]*name=[ '"]*description[^'"]* [^>]*content=['"]([^'"]*)['"][^>]*>/i;
-            const descriptionMatch = descriptionContentRegex.exec(descriptionMatches[0]);
-
-            if (descriptionMatch) {
-                metaDataObject.description = descriptionMatch[1].trim();
-            }
-        }
-    }
-
-    if (!metaDataObject.title) {
-        const titleMetaTagRegex = /<title>([^<]*)<\/title>/gi;
-        const titleMatches = htmlContent.match(titleMetaTagRegex);
-
-        if (titleMatches && titleMatches.length > 0) {
-            const titleContentRegex = /<title>([^<]*)<\/title>/i;
-            const titleMatch = titleContentRegex.exec(titleMatches[0]);
+        if (!meta.title) {
+            const titleRegex = /<title>([^>]*)<\/title>/i;
+            const titleMatch = content.match(titleRegex);
 
             if (titleMatch) {
-                metaDataObject.title = titleMatch[1].trim();
+                meta.title = entities.decode(titleMatch[1]);
             }
         }
     }
+
+    return meta;
 }
 
-async function fetchHtml(urlToFetch) {
+function parseMeta(html, url, options) {
+    let meta = findOGTags(html, url);
+
+    if (options.fallbackOnHTMLTags) {
+        try {
+            meta = {
+                ...findHTMLMetaTags(html, url),
+                ...meta,
+            };
+        } catch (error) {
+            if (__DEV__) {
+                console.log('Error in fallback', error);
+            }
+        }
+    }
+
+    return meta;
+}
+
+async function fetchHtml(urlToFetch, forceGoogle = false) {
     let result;
+
+    let userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36';
+
+    if (forceGoogle) {
+        userAgent = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+    }
 
     try {
         result = await fetch(urlToFetch, {
             method: 'GET',
             headers: {
-                "user-agent": 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                "user-agent": userAgent,
             },
         });
 
@@ -194,4 +258,7 @@ async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: tru
 
 module.exports = {
     extractMeta,
+    // Exporting for testing
+    findOGTags,
+    findHTMLMetaTags,
 };
