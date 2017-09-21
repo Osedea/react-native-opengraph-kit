@@ -97,13 +97,33 @@ const urls = [
         }
     },
     {
+        url: 'https://www.inverse.com/article/34343-a-i-scientists-react-to-elon-musk-ai-comments',
+        name: 'a URL with weird OG and Meta Tags attributes orders',
+        expected: {
+            description: 'Is Musk being "needlessly alarmist"?',
+            image: 'https://fsmedia.imgix.net/6b/4d/f1/b2/8222/4b4d/9dec/9d67ac95f4af/55b72dba1400002f002e1008jpeg.jpeg?rect=0%2C0%2C720%2C360&fm=png&w=1200',
+            title: 'A.I. Scientists to Elon Musk: Stop Saying Robots Will Kill Us All',
+            url: 'https://www.inverse.com/article/34343-a-i-scientists-react-to-elon-musk-ai-comments',
+        },
+    },
+    {
         url: 'http://google.com',
         name: 'Google',
         expected: {
-            description: 'something',
+            description: 'whoKnows',
             image: 'something',
             title: 'Google',
             url: 'http://google.com',
+        },
+    },
+    {
+        url: 'https://www.youtube.com/watch?v=AGkSHE15BSs',
+        name: 'Youtube',
+        expected: {
+            description: undefined,
+            image: 'https://i.ytimg.com/vi/AGkSHE15BSs/hqdefault.jpg',
+            title: 'Julien Verlaguet - Reflex: Reactive Programming at Facebook',
+            url: 'https://www.youtube.com/watch?v=AGkSHE15BSs',
         },
     }
 ];
@@ -142,16 +162,20 @@ describe('Parser', function() {
         const simpleMetaTag = '<meta name="title" content="test title" />';
         const expectedSimpleMetaTag = { title: 'test title' };
         const simpleMetaTagReversed = '<meta content="test title" name="title" />';
+        const simpleMetaTagWithItemprop = '<meta itemprop="title" content="test title" />';
         const simpleMetaTagWithMore = '<meta class="weird" name="title" stuff="thing" content="test title" />';
         const severalMetaTagsInOne = '<meta class="weird" name="title" content="test title" /><meta stuff="thing" class="weird" name="description" content="test description" />';
         const expectedSeveralMetaTags = { title: 'test title', description: 'test description' };
         const severalMetaTagsInOneReversed = '<meta name="title" class="weird" content="test title" /><meta stuff="thing" content="test description" class="weird" name="description" />';
 
-        it('should find meta info in a valid meta tags', function() {
+        it('should find meta info in a valid meta tag', function() {
             expect(parser.findHTMLMetaTags(simpleMetaTag)).to.deep.equal(expectedSimpleMetaTag);
         });
-        it('should find meta info in a reversed meta tags', function() {
+        it('should find meta info in a reversed meta tag', function() {
             expect(parser.findHTMLMetaTags(simpleMetaTag)).to.deep.equal(expectedSimpleMetaTag);
+        });
+        it('should find meta info in a meta tag with itemprop', function() {
+            expect(parser.findHTMLMetaTags(simpleMetaTagWithItemprop)).to.deep.equal(expectedSimpleMetaTag);
         });
         it('should find meta info in a meta tags with weird extra attributes', function() {
             expect(parser.findHTMLMetaTags(simpleMetaTag)).to.deep.equal(expectedSimpleMetaTag);
@@ -176,14 +200,27 @@ describe('Parser', function() {
                         'title',
                         'url',
                     ]
+                    const errors = [];
 
                     propsToCheck.forEach((prop) => {
-                        if (item.expected.description === 'something') {
-                            expect(meta[prop]).to.not.be.undefined;
+                        if (item.expected[prop] === 'something') {
+                            try {
+                                expect(meta[prop]).to.not.be.undefined;
+                            } catch (error) {
+                                errors.push(`${prop} should be not be undefined: ${meta[prop]}`);
+                            }
+                        } else if (item.expected[prop] === 'whoKnows') {
+                            // do not test that prop. It could be defined or not, according to the time
                         } else {
-                            expect(meta[prop]).to.equal(item.expected[prop]);
+                            try {
+                                expect(meta[prop]).to.equal(item.expected[prop]);
+                            } catch (error) {
+                                errors.push(`${prop} should be ${item.expected[prop]}. Not ${meta[prop]}`);
+                            }
                         }
                     });
+
+                    expect(errors).to.deep.equal([]);
                 });
             });
         });

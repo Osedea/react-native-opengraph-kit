@@ -70,12 +70,12 @@ function findOGTags(content, url) {
 }
 
 function findHTMLMetaTags(content, url) {
-    const metaTagHTMLRegex = /<meta(?:[^>]*name=[ '"]([^'"]*))?[^>]*(?:[^>]*content=["]([^"]*)["])?[^>]*>/gi;
+    const metaTagHTMLRegex = /<meta(?:[^>]*(?:name|itemprop)=[ '"]([^'"]*))?[^>]*(?:[^>]*content=["]([^"]*)["])?[^>]*>/gi;
     const matches = content.match(metaTagHTMLRegex);
     let meta = {};
 
     if (matches) {
-        const metaPropertyRegex = /<meta[^>]*name=[ "]([^"]*)[^>]*>/i;
+        const metaPropertyRegex = /<meta[^>]*(?:name|itemprop)=[ "]([^"]*)[^>]*>/i;
         const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
 
         for (let i = matches.length; i--;) {
@@ -207,6 +207,29 @@ async function fetchHtml(urlToFetch, forceGoogle = false) {
     }
 }
 
+async function fetchJSON(urlToFetch, urlOfVideo) {
+    try {
+        result = await fetch(urlToFetch, { method: 'GET' });
+
+        if (result.status >= 400) {
+            throw result;
+        }
+
+        const resultParsed = await result.json();
+
+        return {
+            title: resultParsed.title,
+            image: resultParsed.thumbnail_url,
+            url: urlOfVideo,
+        };
+    } catch (error) {
+        if (__DEV__) {
+            console.log(error);
+        }
+        return null;
+    }
+}
+
 function getUrls(contentToMatch) {
     const regexp = /((?:(http|https|Http|Https)?:?\/?\/?(?:(?:[a-zA-Z0-9\$\-_\.\+!\*'\(\),;\?&=]|(?:%[a-fA-F0-9]{2})){1,64}(?::(?:[a-zA-Z0-9\$\-_\.\+!\*'\(\),;\?&=]|(?:%[a-fA-F0-9]{2})){1,25})?@)?)?((?:(?:[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}\.)+(?:[a-z]{1,63}))|(?:(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[0-9])))(?::\d{1,5})?)(\/(?:(?:[a-zA-Z0-9;\/\?:@&=#~\-\.\+!\*'\(\),_])|(?:%[a-fA-F0-9]{2}))*)?(?:\b|$)/gi;
     const urls = contentToMatch.match(regexp);
@@ -237,13 +260,17 @@ async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: tru
         let i = 0;
 
         while (!metaData && i < urls.length) {
-            metaData = await fetchHtml(urls[i])
-                .then(
-                    (html) => ({
-                        ...html ? parseMeta(html, urls[i], options) : {},
-                        url: urls[i],
-                    })
-                );
+            if (urls[i].indexOf('youtube.com') >= 0) {
+              metaData = await fetchJSON(`https://www.youtube.com/oembed?url=${urls[i]}&format=json`, urls[i])
+            } else {
+              metaData = await fetchHtml(urls[i])
+                  .then(
+                      (html) => ({
+                          ...html ? parseMeta(html, urls[i], options) : {},
+                          url: urls[i],
+                      })
+                  );
+            }
 
             i++;
         }
