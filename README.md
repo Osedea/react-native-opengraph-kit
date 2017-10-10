@@ -10,7 +10,7 @@ For react-native v0.26+
 
 Be sure to have in your `Info.plist`
 
-```
+```xml
 <key>NSAppTransportSecurity</key>
 <!--See http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/ -->
 <dict>
@@ -22,13 +22,13 @@ Be sure to have in your `Info.plist`
 
 # Subcomponents
 
-```
+```js
 import { OpenGraphAwareInput, OpenGraphDisplay, OpenGraphParser } from 'react-native-opengraph-kit';
 ```
 
 ## OpenGraphAwareInput
 
-```
+```js
 <OpenGraphAwareInput
     containerStyle={styles.textInputContainer}
     textInputStyle={styles.textInput}
@@ -50,7 +50,7 @@ showIcon | React.PropTypes.bool | Should we show the Icon or not? (default is `f
 
 Fully customizable widget for the extracted data
 
-```
+```js
 <OpenGraphDisplay
     data={this.state.dataIGotFromTheParser}
 />
@@ -75,7 +75,7 @@ iconStyle | Image.propTypes.style | The style of the Icon
 
 Where the magic happens
 
-```
+```js
 handleTextChange = (event) => {
     OpenGraphParser.extractMeta(event.nativeEvent.text)
     .then((data) => {
@@ -97,7 +97,7 @@ render() {
 
 Example of `data` object:
 
-```
+```js
 {
     description: "We're a young and inspired team that leverages technical knowledge to turn ideas into creative and efficient digital solutions.",
     image: "https://osedea.com/images/thumbnail-osedea-1.png",
