@@ -97,7 +97,7 @@ render() {
 
 Example of `data` object:
 
-```json
+```js
 {
     description: "We're a young and inspired team that leverages technical knowledge to turn ideas into creative and efficient digital solutions.",
     image: "https://osedea.com/images/thumbnail-osedea-1.png",
