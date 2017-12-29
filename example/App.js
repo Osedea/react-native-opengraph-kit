@@ -1,5 +1,17 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
+
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { OpenGraphAwareInput, OpenGraphDisplay, OpenGraphParser } from 'react-native-opengraph-kit';
 
 export default class Example extends Component {
