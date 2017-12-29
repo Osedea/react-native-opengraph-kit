@@ -3498,8 +3498,9 @@ react-devtools-core@^2.5.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-native-opengraph-kit@../:
-  version "1.5.2"
+react-native-opengraph-kit@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-opengraph-kit/-/react-native-opengraph-kit-1.6.0.tgz#236a30aa78426b3070c83ada9c6e84485429ec77"
   dependencies:
     html-entities "~1.2.0"
     lodash.debounce "~4.0.8"

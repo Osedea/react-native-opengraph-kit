@@ -51,7 +51,7 @@ const urls = [
         name: 'a website that allows only google bot through if programmatically called',
         expected: {
             description: '另外，代號「劍影專案」的海劍羚飛彈（Sea Oryx Missile system）短程防空反飛彈系統，是以天劍一短程防空飛彈結合紅外線與被動雷達整合導引的輕型、點防禦艦對空飛彈，用來攔截反艦飛彈 ，今年也將安排進入實彈測試。',
-            image: 'https://s.yimg.com/uu/api/res/1.2/N.CRvYlQ64WaxyiAOa343Q--/aD0zNzI7dz03NDQ7c209MTthcHBpZD15dGFjaHlvbg--/http://media.zenfs.com/en/homerun/feed_manager_auto_publish_494/7aca164b9949d2a9879d8b6f0e85bab6',
+            image: 'https://s.yimg.com/uu/api/res/1.2/bz7yYtGiWEpxQ.f5xR.T7Q--~B/aD0zNzI7dz03NDQ7c209MTthcHBpZD15dGFjaHlvbg--/http://media.zenfs.com/en/homerun/feed_manager_auto_publish_494/7aca164b9949d2a9879d8b6f0e85bab6',
             title: '【獨家】多重阻嚇解放軍 中科院實測天弓、天劍與雄風系列「新三彈」 - Yahoo奇摩新聞',
             url: 'https://tw.news.yahoo.com/%E3%80%90%E7%8D%A8%E5%AE%B6%E3%80%91%E5%A4%9A%E9%87%8D%E9%98%BB%E5%9A%87%E8%A7%A3%E6%94%BE%E8%BB%8D%E3%80%80%E4%B8%AD%E7%A7%91%E9%99%A2%E5%AF%A6%E6%B8%AC%E5%A4%A9%E5%BC%93%E3%80%81%E5%A4%A9%E5%8A%8D-013928232.html',
         }
@@ -81,7 +81,7 @@ const urls = [
         name: 'a URL with a protocol agnostic image in HTTPS',
         expected: {
             description: 'Visit BBC News for up-to-the-minute news, breaking news, video, audio and feature stories. BBC News provides trusted World and UK news as well as local and regional perspectives. Also entertainment, business, science, technology and health news.',
-            image: 'https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/1.2.0/bbc_news_logo.png?cb=1',
+            image: 'https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.0.0/bbc_news_logo.png',
             title: 'Home - BBC News',
             url: 'https://www.bbc.co.uk/news',
         }
@@ -91,7 +91,7 @@ const urls = [
         name: 'a URL with a protocol agnostic image in HTTP',
         expected: {
             description: 'Visit BBC News for up-to-the-minute news, breaking news, video, audio and feature stories. BBC News provides trusted World and UK news as well as local and regional perspectives. Also entertainment, business, science, technology and health news.',
-            image: 'http://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/1.2.0/bbc_news_logo.png?cb=1',
+            image: 'http://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.0.0/bbc_news_logo.png',
             title: 'Home - BBC News',
             url: 'http://www.bbc.co.uk/news',
         }
