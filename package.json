@@ -1,6 +1,6 @@
 {
   "name": "react-native-opengraph-kit",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "A set of components and utils useful to extract opengraph data directly from your react-native app",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,8 @@
   "homepage": "https://github.com/Osedea/react-native-opengraph-kit#readme",
   "dependencies": {
     "html-entities": "~1.2.0",
-    "lodash.debounce": "~4.0.8"
+    "lodash.debounce": "~4.0.8",
+    "proptypes": "^1.1.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",
