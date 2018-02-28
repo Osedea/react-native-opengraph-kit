@@ -81,7 +81,7 @@ const urls = [
         name: 'a URL with a protocol agnostic image in HTTPS',
         expected: {
             description: 'Visit BBC News for up-to-the-minute news, breaking news, video, audio and feature stories. BBC News provides trusted World and UK news as well as local and regional perspectives. Also entertainment, business, science, technology and health news.',
-            image: 'https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.0.0/bbc_news_logo.png',
+            image: /https:\/\/m\.files\.bbci\.co\.uk\/modules\/bbc-morph-news-waf-page-meta\/[1-9]\.[1-9]+\.[1-9]+\/bbc_news_logo\.png/,
             title: 'Home - BBC News',
             url: 'https://www.bbc.co.uk/news',
         }
@@ -91,7 +91,7 @@ const urls = [
         name: 'a URL with a protocol agnostic image in HTTP',
         expected: {
             description: 'Visit BBC News for up-to-the-minute news, breaking news, video, audio and feature stories. BBC News provides trusted World and UK news as well as local and regional perspectives. Also entertainment, business, science, technology and health news.',
-            image: 'http://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.0.0/bbc_news_logo.png',
+            image: /http:\/\/m\.files\.bbci\.co\.uk\/modules\/bbc-morph-news-waf-page-meta\/[1-9]\.[1-9]+\.[1-9]+\/bbc_news_logo\.png/,
             title: 'Home - BBC News',
             url: 'http://www.bbc.co.uk/news',
         }
@@ -124,6 +124,16 @@ const urls = [
             image: 'https://i.ytimg.com/vi/AGkSHE15BSs/hqdefault.jpg',
             title: 'Julien Verlaguet - Reflex: Reactive Programming at Facebook',
             url: 'https://www.youtube.com/watch?v=AGkSHE15BSs',
+        },
+    },
+    {
+        url: 'https://www.facebook.com/slackhq/posts/848094788621462',
+        name: 'Facebook',
+        expected: {
+            description: "We're happy you're here! If you need help, you might want to search for an answer on our Help Center (https://get.slack.help/hc/en-us), drop an email to feedback@slack.com, or find us on Twitter as...",
+            image: 'something',
+            title: 'Slack',
+            url: 'https://www.facebook.com/slackhq/posts/848094788621462',
         },
     }
 ];
@@ -211,6 +221,15 @@ describe('Parser', function() {
                             }
                         } else if (item.expected[prop] === 'whoKnows') {
                             // do not test that prop. It could be defined or not, according to the time
+                        } else if (typeof item.expected[prop] === 'object') {
+                            // it's a regexp
+                            try {
+                                const doesItMatch = meta[prop].match(item.expected[prop]);
+
+                                expect(doesItMatch).to.not.equal(null);
+                            } catch (error) {
+                                errors.push(`${prop} value ${meta[prop]} should match ${item.expected[prop]}.`);
+                            }
                         } else {
                             try {
                                 expect(meta[prop]).to.equal(item.expected[prop]);
