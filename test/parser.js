@@ -57,13 +57,13 @@ const urls = [
         }
     },
     {
-        url: 'www.centrelapinscretins.com',
+        url: 'https://www.centrelapinscretins.com',
         name: 'a URL with a relative image url',
         expected: {
             description: undefined,
-            image: 'http://www.centrelapinscretins.com/static/img/social-network.png',
+            image: 'https://www.centrelapinscretins.com/static/img/social-network.png',
             title: 'Accueil\n        | Centre d\'amusement Les Lapins Crétins',
-            url: 'http://www.centrelapinscretins.com',
+            url: 'https://www.centrelapinscretins.com',
         }
     },
     {
