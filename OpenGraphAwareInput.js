@@ -40,13 +40,13 @@ export default class OpenGraphAwareInput extends Component {
         super(props);
 
         this.state = {
-            openGraphData: {},
+            openGraphData: [],
         };
     }
 
     handleDismissOpengraph = () => {
         this.setState({
-            openGraphData: {},
+            openGraphData: [],
         });
     }
 
@@ -57,11 +57,11 @@ export default class OpenGraphAwareInput extends Component {
                 (data) => {
                     const customEvent = {};
 
-                    this.setState({ openGraphData: data || {} });
+                    this.setState({ openGraphData: data || [] });
 
                     if (this.props.onChange) {
                         customEvent.event = event;
-                        customEvent.opengraphData = data || {};
+                        customEvent.opengraphData = data || [];
                         customEvent.text = text;
 
                         this.props.onChange(customEvent);
@@ -93,15 +93,17 @@ export default class OpenGraphAwareInput extends Component {
                         this.props.textInputStyle,
                     ]}
                 />
-                <OpenGraphDisplay
-                    data={this.state.openGraphData}
-                    onIconPress={this.props.showIcon
-                        ? this.props.onIconPress || this.handleDismissOpengraph
-                        : null
-                    }
-                    iconSource={this.props.iconSource}
-                    iconStyle={this.props.iconStyle}
-                />
+                {this.state.openGraphData.map((meta, i) =>
+                    <OpenGraphDisplay
+                        data={meta}
+                        onIconPress={this.props.showIcon
+                            ? this.props.onIconPress || this.handleDismissOpengraph
+                            : null
+                        }
+                        iconSource={this.props.iconSource}
+                        iconStyle={this.props.iconStyle}
+                    />
+                )}
             </View>
         );
     }
