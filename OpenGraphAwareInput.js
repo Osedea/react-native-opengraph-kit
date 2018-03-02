@@ -3,6 +3,7 @@ import {
     StyleSheet,
     TextInput,
     View,
+    ViewPropTypes,
 } from 'react-native';
 import PropTypes from 'proptypes';
 import debounce from 'lodash.debounce';
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
 
 export default class OpenGraphAwareInput extends Component {
     static propTypes = {
-        containerStyle: View.propTypes.style,
+        containerStyle: ViewPropTypes.style,
         debounceDelay: PropTypes.number,
         iconSource: OpenGraphDisplay.propTypes.iconSource,
         iconStyle: OpenGraphDisplay.propTypes.iconStyle,

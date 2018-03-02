@@ -20,6 +20,7 @@ import {
     StyleSheet,
     Text,
     TouchableWithoutFeedback,
+    ViewPropTypes,
 } from 'react-native';
 import PropTypes from 'proptypes';
 
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
 
 export default class OpenGraphDisplay extends Component {
     static propTypes = {
-        containerStyle: View.propTypes.style,
+        containerStyle: ViewPropTypes.style,
         descriptionStyle: Text.propTypes.style,
         data: PropTypes.shape({
             url: PropTypes.string,
@@ -92,12 +93,12 @@ export default class OpenGraphDisplay extends Component {
         iconStyle: Image.propTypes.style,
         imageStyle: Image.propTypes.style,
         onIconPress: PropTypes.func,
-        textContainerStyle: View.propTypes.style,
-        touchContainerStyle: View.propTypes.style,
+        textContainerStyle: ViewPropTypes.style,
+        touchContainerStyle: ViewPropTypes.style,
         titleStyle: Text.propTypes.style,
         urlStyle: Text.propTypes.style,
-        urlOnlyContainerStyle: View.propTypes.style,
-        urlOnlyTouchContainerStyle: View.propTypes.style,
+        urlOnlyContainerStyle: ViewPropTypes.style,
+        urlOnlyTouchContainerStyle: ViewPropTypes.style,
     };
 
     static defaultProps = {

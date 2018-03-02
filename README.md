@@ -4,7 +4,7 @@
 
 A set of components and utils useful to extract opengraph data directly from your react-native app, with almost no dependency.
 
-For react-native v0.26+
+For react-native v0.44+
 
 # Prerequesites
 
@@ -38,7 +38,7 @@ import { OpenGraphAwareInput, OpenGraphDisplay, OpenGraphParser } from 'react-na
 
 Property Name | Type | Description
 --- | --- | ---
-containerStyle | View.propTypes.style | A style to pass to customize the style of the container
+containerStyle | ViewPropTypes.style | A style to pass to customize the style of the container
 onChange | React.PropTypes.func | The function to call on change in the TextInput
 textInputStyle | TextInput.propTypes.style | A style to pass to customize the style of the textInput
 onIconPress | React.PropTypes.func | A function to call when the Icon is pressed (see `OpenGraphDisplay`). By default, the function clear the `opengraphdata` field returned (and therefore the resulting `OpenGraphDisplay`).
@@ -59,14 +59,14 @@ Fully customizable widget for the extracted data
 Property Name | Type | Description
 --- | --- | ---
 data | React.PropTypes.shape({ <br>    url: React.PropTypes.string, <br>    image: React.PropTypes.string,<br>    title: React.PropTypes.string,<br>    description: React.PropTypes.string,<br>}).isRequired | The data gotten out of the `OpenGraphAwareInput` or the `OpenGraphParser`
-containerStyle | View.propTypes.style | A style to pass to customize the style of the container
+containerStyle | ViewPropTypes.style | A style to pass to customize the style of the container
 imageStyle | Image.propTypes.style | A style to pass to customize the style of the image
-textContainerStyle | View.propTypes.style | A style to pass to customize the style of the textContainer
-touchContainerStyle | View.propTypes.style | A style to pass to customize the style of the View that is touchable when the content is "rich" (as opposed to `urlOnlyTouchContainerStyle`)
+textContainerStyle | ViewPropTypes.style | A style to pass to customize the style of the textContainer
+touchContainerStyle | ViewPropTypes.style | A style to pass to customize the style of the View that is touchable when the content is "rich" (as opposed to `urlOnlyTouchContainerStyle`)
 titleStyle | Text.propTypes.style | A style to pass to customize the style of the title
 descriptionStyle | Text.propTypes.style | A style to pass to customize the style of the description
 urlStyle | Text.propTypes.style | A style to pass to customize the style of the url
-urlOnlyTouchContainerStyle | View.propTypes.style | A style to pass to customize the style of the View that is touchable when the content is "poor" (Just the url, no info has been successfully fetched)
+urlOnlyTouchContainerStyle | ViewPropTypes.style | A style to pass to customize the style of the View that is touchable when the content is "poor" (Just the url, no info has been successfully fetched)
 onIconPress | React.PropTypes.func | When this function is provided, puts an Icon on the right of the OpenGraphDisplay (by default an `x`)
 iconSource | Image.propTypes.source | The Image Source to use as Icon
 iconStyle | Image.propTypes.style | The style of the Icon
