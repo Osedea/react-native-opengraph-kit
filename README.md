@@ -45,6 +45,7 @@ onIconPress | React.PropTypes.func | A function to call when the Icon is pressed
 iconSource | Image.propTypes.source | The Image Source to use as Icon (see `OpenGraphDisplay`)
 iconStyle | Image.propTypes.style | The style of the Icon (see `OpenGraphDisplay`)
 showIcon | React.PropTypes.bool | Should we show the Icon or not? (default is `false`)
+resultLimit | React.PropTypes.number | Max number of parsed OpenGraph links to display (default is `1`)
 
 ## OpenGraphDisplay
 

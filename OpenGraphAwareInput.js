@@ -29,11 +29,13 @@ export default class OpenGraphAwareInput extends Component {
         onIconPress: PropTypes.func,
         showIcon: PropTypes.bool,
         textInputStyle: TextInput.propTypes.style,
+        resultLimit: PropTypes.number,
     };
 
     static defaultProps = {
         debounceDelay: 300,
         showIcon: false,
+        resultLimit: 1,
     };
 
     constructor(props) {
@@ -79,6 +81,7 @@ export default class OpenGraphAwareInput extends Component {
     };
 
     render() {
+        const ogDataToDisplay = this.state.openGraphData.slice(0, this.props.resultLimit);
         return (
             <View
                 style={[
@@ -93,8 +96,9 @@ export default class OpenGraphAwareInput extends Component {
                         this.props.textInputStyle,
                     ]}
                 />
-                {this.state.openGraphData.map((meta, i) =>
+                {ogDataToDisplay.map((meta, i) =>
                     <OpenGraphDisplay
+                        key={i}
                         data={meta}
                         onIconPress={this.props.showIcon
                             ? this.props.onIconPress || this.handleDismissOpengraph
