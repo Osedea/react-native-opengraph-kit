@@ -6,6 +6,10 @@ A set of components and utils useful to extract opengraph data directly from you
 
 For react-native v0.44+
 
+:warning: `2.0.0` is a breaking change, the Parser is now returning an `Array` of results for all the URLs in the text analysed.
+
+If you are using only the `OpenGraphAwareInput`, you don't have to change anything.
+
 # Prerequesites
 
 Be sure to have in your `Info.plist`
@@ -99,13 +103,15 @@ render() {
 Example of `data` object:
 
 ```js
-{
-    description: "We're a young and inspired team that leverages technical knowledge to turn ideas into creative and efficient digital solutions.",
-    image: "https://osedea.com/images/thumbnail-osedea-1.png",
-    title: "OSEDEA | Digital Efficiency & Creativity",
-    type: "website",
-    url: "http://osedea.com",
-}
+[
+    {
+        description: "We're a young and inspired team that leverages technical knowledge to turn ideas into creative and efficient digital solutions.",
+        image: "https://osedea.com/images/thumbnail-osedea-1.png",
+        title: "OSEDEA | Digital Efficiency & Creativity",
+        type: "website",
+        url: "http://osedea.com",
+    }
+]
 ```
 
 See simple React-native example project in [example](./example) for a working example
