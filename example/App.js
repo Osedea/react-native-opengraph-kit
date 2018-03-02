@@ -16,7 +16,7 @@ import { OpenGraphAwareInput, OpenGraphDisplay, OpenGraphParser } from 'react-na
 
 export default class Example extends Component {
     state = {
-        data: {},
+        data: [],
     };
 
     handleIconPress = () => {
@@ -48,9 +48,11 @@ export default class Example extends Component {
                     onChange={this.handleTextChange}
                 />
                 <Text style={styles.title}>OpenGraphDisplay</Text>
-                <OpenGraphDisplay
-                    data={this.state.data}
-                />
+                {this.state.data.map((meta, i) =>
+                    <OpenGraphDisplay
+                        data={meta}
+                    />
+                )}
             </View>
         );
     }

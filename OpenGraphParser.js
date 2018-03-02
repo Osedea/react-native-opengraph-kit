@@ -256,20 +256,21 @@ async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: tru
     try {
         const urls = getUrls(textContent);
 
-        let metaData = null;
+        let metaData = [];
         let i = 0;
 
-        while (!metaData && i < urls.length) {
+        while (i < urls.length) {
             if (urls[i].indexOf('youtube.com') >= 0) {
-              metaData = await fetchJSON(`https://www.youtube.com/oembed?url=${urls[i]}&format=json`, urls[i])
+              metaData.push(await fetchJSON(`https://www.youtube.com/oembed?url=${urls[i]}&format=json`, urls[i]));
             } else {
-              metaData = await fetchHtml(urls[i])
+              metaData.push(await fetchHtml(urls[i])
                   .then(
                       (html) => ({
                           ...html ? parseMeta(html, urls[i], options) : {},
                           url: urls[i],
                       })
-                  );
+                  )
+              );
             }
 
             i++;
