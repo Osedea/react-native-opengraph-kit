@@ -260,7 +260,7 @@ async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: tru
         let i = 0;
 
         while (i < urls.length) {
-            if (urls[i].indexOf('youtube.com') >= 0) {
+            if (urls[i].indexOf('youtube.com') >= 0 || urls[i].indexOf('youtu.be') >= 0) {
               metaData.push(await fetchJSON(`https://www.youtube.com/oembed?url=${urls[i]}&format=json`, urls[i]));
             } else {
               metaData.push(await fetchHtml(urls[i])
