@@ -83,13 +83,17 @@ function findHTMLMetaTags(content, url) {
         const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
 
         const shortCutIconRegex = /<link[^>]*shortcut icon[^>]*>/i;
-        const matches2 = content.match(shortCutIconRegex);
-
-        if (matches2.length > 0) {
+        const appleTouchIconRegex =
+            /<link[^>]*apple-touch-icon-precomposed[^>]*/i;
+        let matches2 = content.match(shortCutIconRegex);
+        if (!matches2) {
+            matches2 = content.match(appleTouchIconRegex);
+        }
+        if (matches2 && matches2.length > 0) {
             const matches3 = matches2[0].match(/href="([^"]*)"/);
 
 
-            if (matches3.length > 1) {
+            if (matches3 && matches3.length > 1) {
                 const shortIconRef = matches3[1];
                 meta['shortIconRef'] = entities.decode(shortIconRef);
             }
