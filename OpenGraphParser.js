@@ -88,6 +88,7 @@ function findHTMLMetaTags(content, url) {
         if (matches2.length > 0) {
             const matches3 = matches2[0].match(/href="([^"]*)"/);
 
+
             if (matches3.length > 1) {
                 const shortIconRef = matches3[1];
                 meta['shortIconRef'] = entities.decode(shortIconRef);
