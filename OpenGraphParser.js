@@ -5,19 +5,21 @@ const entities = new AllHtmlEntities();
 function findOGTags(content, url) {
     const metaTagOGRegex = /<meta[^>]*(?:property=[ '"]*og:([^'"]*))?[^>]*(?:content=["]([^"]*)["])?[^>]*>/gi;
     const matches = content.match(metaTagOGRegex);
-    let meta = {};
+    const meta = {};
 
     if (matches) {
         const metaPropertyRegex = /<meta[^>]*property=[ "]*og:([^"]*)[^>]*>/i;
         const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
 
         for (let i = matches.length; i--;) {
+            let propertyMatch;
+            let contentMatch;
             let metaName;
             let metaValue;
 
             try {
-                const propertyMatch = metaPropertyRegex.exec(matches[i]);
-                const contentMatch = metaContentRegex.exec(matches[i]);
+                propertyMatch = metaPropertyRegex.exec(matches[i]);
+                contentMatch = metaContentRegex.exec(matches[i]);
 
                 if (!propertyMatch || !contentMatch) {
                     continue;
@@ -52,8 +54,7 @@ function findOGTags(content, url) {
                         // handle protocol agnostic meta URLs
                         if (url.indexOf('https://') === 0) {
                             metaValue = `https:${metaValue}`;
-                        }
-                        else if (url.indexOf('http://') === 0) {
+                        } else if (url.indexOf('http://') === 0) {
                             metaValue = `http:${metaValue}`;
                         }
                     }
@@ -72,19 +73,21 @@ function findOGTags(content, url) {
 function findHTMLMetaTags(content, url) {
     const metaTagHTMLRegex = /<meta(?:[^>]*(?:name|itemprop)=[ '"]([^'"]*))?[^>]*(?:[^>]*content=["]([^"]*)["])?[^>]*>/gi;
     const matches = content.match(metaTagHTMLRegex);
-    let meta = {};
+    const meta = {};
 
     if (matches) {
         const metaPropertyRegex = /<meta[^>]*(?:name|itemprop)=[ "]([^"]*)[^>]*>/i;
         const metaContentRegex = /<meta[^>]*content=[ "]([^"]*)[^>]*>/i;
 
         for (let i = matches.length; i--;) {
+            let propertyMatch;
+            let contentMatch;
             let metaName;
             let metaValue;
 
             try {
-                const propertyMatch = metaPropertyRegex.exec(matches[i]);
-                const contentMatch = metaContentRegex.exec(matches[i]);
+                propertyMatch = metaPropertyRegex.exec(matches[i]);
+                contentMatch = metaContentRegex.exec(matches[i]);
 
                 if (!propertyMatch || !contentMatch) {
                     continue;
@@ -119,8 +122,7 @@ function findHTMLMetaTags(content, url) {
                         // handle protocol agnostic meta URLs
                         if (url.indexOf('https://') === 0) {
                             metaValue = `https:${metaValue}`;
-                        }
-                        else if (url.indexOf('http://') === 0) {
+                        } else if (url.indexOf('http://') === 0) {
                             metaValue = `http:${metaValue}`;
                         }
                     }
@@ -167,17 +169,19 @@ function parseMeta(html, url, options) {
 async function fetchHtml(urlToFetch, forceGoogle = false) {
     let result;
 
-    let userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36';
+    let userAgent
+        = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36';
 
     if (forceGoogle) {
-        userAgent = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+        userAgent
+            = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
     }
 
     try {
         result = await fetch(urlToFetch, {
             method: 'GET',
             headers: {
-                "user-agent": userAgent,
+                'user-agent': userAgent,
             },
         });
 
@@ -185,8 +189,7 @@ async function fetchHtml(urlToFetch, forceGoogle = false) {
             throw result;
         }
 
-        return result.text()
-        .then((resultParsed) => (resultParsed));
+        return result.text().then((resultParsed) => resultParsed);
     } catch (responseOrError) {
         if (responseOrError.message && __DEV__) {
             if (responseOrError.message === 'Network request failed') {
@@ -197,10 +200,12 @@ async function fetchHtml(urlToFetch, forceGoogle = false) {
             return null;
         }
 
-        return responseOrError.text()
-        .then((error) => {
+        return responseOrError.text().then((error) => {
             if (__DEV__) {
-                console.log('An error has occured while fetching url content', error);
+                console.log(
+                    'An error has occured while fetching url content',
+                    error
+                );
             }
             return null;
         });
@@ -209,7 +214,7 @@ async function fetchHtml(urlToFetch, forceGoogle = false) {
 
 async function fetchJSON(urlToFetch, urlOfVideo) {
     try {
-        result = await fetch(urlToFetch, { method: 'GET' });
+        const result = await fetch(urlToFetch, { method: 'GET' });
 
         if (result.status >= 400) {
             throw result;
@@ -231,7 +236,7 @@ async function fetchJSON(urlToFetch, urlOfVideo) {
 }
 
 function getUrls(contentToMatch) {
-    const regexp = /(?:(?=[\s`!()\[\]{};:'".,<>?«»“”‘’])|\b)((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/|[a-z0-9.\-]+[.](?:com|org|net))(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))*(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]|\b))/gi
+    const regexp = /(?:(?=[\s`!()\[\]{};:'".,<>?«»“”‘’])|\b)((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/|[a-z0-9.\-]+[.](?:com|org|net))(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))*(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]|\b))/gi;
     const urls = contentToMatch.match(regexp);
     const urlsToReturn = [];
 
@@ -252,25 +257,34 @@ function getUrls(contentToMatch) {
     return urlsToReturn;
 }
 
-async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: true }) {
+async function extractMeta(
+    textContent = '',
+    options = { fallbackOnHTMLTags: true }
+) {
     try {
         const urls = getUrls(textContent);
 
-        let metaData = [];
+        const metaData = [];
         let i = 0;
 
         while (i < urls.length) {
             if (urls[i].indexOf('youtube.com') >= 0) {
-              metaData.push(await fetchJSON(`https://www.youtube.com/oembed?url=${urls[i]}&format=json`, urls[i]));
-            } else {
-              metaData.push(await fetchHtml(urls[i])
-                  .then(
-                      (html) => ({
-                          ...html ? parseMeta(html, urls[i], options) : {},
-                          url: urls[i],
-                      })
-                  )
-              );
+                metaData.push(
+                    await fetchJSON(
+                        `https://www.youtube.com/oembed?url=${
+                            urls[i]
+                        }&format=json`,
+                        urls[i]
+                    )
+                );
+            } else { /* eslint-disable no-loop-func */
+                metaData.push(
+                    await fetchHtml(urls[i])
+                        .then((html) => ({
+                            ...html ? parseMeta(html, urls[i], options) : {},
+                            url: urls[i],
+                        }))
+                );
             }
 
             i++;
@@ -284,9 +298,13 @@ async function extractMeta(textContent = '', options = { fallbackOnHTMLTags: tru
     }
 }
 
-module.exports = {
+const exporting = {
     extractMeta,
     // Exporting for testing
     findOGTags,
     findHTMLMetaTags,
 };
+// For testing
+module.exports = exporting;
+
+export default exporting;

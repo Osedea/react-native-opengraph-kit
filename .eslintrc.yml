@@ -1,0 +1,18 @@
+extends:
+  - osedea/react-native
+
+globals:
+  __DEV__: true
+
+env:
+  jest: true
+
+rules:
+  operator-linebreak:
+    - error
+    - before
+  no-use-before-define: off
+  no-continue: off
+
+  # Temporary
+  react/jsx-curly-brace-presence: off
