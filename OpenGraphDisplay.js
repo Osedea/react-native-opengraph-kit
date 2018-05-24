@@ -106,17 +106,17 @@ export default class OpenGraphDisplay extends Component {
     };
 
     handleLinkPress = () => {
-        Linking.canOpenURL(this.props.data.url).then((supported) => {
-            if (!supported) {
-                console.log(`Can\'t handle url: ${this.props.data.url}`);
+        Linking.canOpenURL(this.props.data.url)
+            .then((supported) => {
+                if (!supported) {
+                    console.log(`Can't handle url: ${this.props.data.url}`);
 
-                return null;
-            } else {
-                return Linking.openURL(this.props.data.url);
-            }
-        }).catch(
-            (err) => console.error('An error occurred', err)
-        );
+                    return null;
+                } else {
+                    return Linking.openURL(this.props.data.url);
+                }
+            })
+            .catch((err) => console.error('An error occurred', err));
     };
 
     render() {
@@ -126,41 +126,32 @@ export default class OpenGraphDisplay extends Component {
             return opengraph;
         }
 
-        if (this.props.data.title
+        if (
+            this.props.data.title
             || this.props.data.description
             || this.props.data.image
         ) {
             opengraph = (
-                <TouchableWithoutFeedback
-                    onPress={this.handleLinkPress}
-                >
+                <TouchableWithoutFeedback onPress={this.handleLinkPress}>
                     <View
                         style={[
                             styles.container,
                             this.props.touchContainerStyle,
                         ]}
                     >
-                        {this.props.data.image ?
+                        {this.props.data.image ? (
                             <Image
-                                style={[
-                                    styles.image,
-                                    this.props.imageStyle,
-                                ]}
+                                style={[styles.image, this.props.imageStyle]}
                                 source={{ uri: this.props.data.image }}
-                            /> : null
-                        }
+                            />
+                        ) : null}
                         <View
                             style={[
                                 styles.textContent,
                                 this.props.textContainerStyle,
                             ]}
                         >
-                            <Text
-                                style={[
-                                    styles.title,
-                                    this.props.titleStyle,
-                                ]}
-                            >
+                            <Text style={[styles.title, this.props.titleStyle]}>
                                 {this.props.data.title || ''}
                             </Text>
                             <Text
@@ -171,13 +162,10 @@ export default class OpenGraphDisplay extends Component {
                             >
                                 {this.props.data.description || ''}
                             </Text>
-                            <Text
-                                style={[
-                                    styles.url,
-                                    this.props.urlStyle,
-                                ]}
-                            >
-                                {this.props.data.url ? this.props.data.url.toLowerCase() : ''}
+                            <Text style={[styles.url, this.props.urlStyle]}>
+                                {this.props.data.url
+                                    ? this.props.data.url.toLowerCase()
+                                    : ''}
                             </Text>
                         </View>
                     </View>
@@ -185,22 +173,17 @@ export default class OpenGraphDisplay extends Component {
             );
         } else {
             opengraph = (
-                <TouchableWithoutFeedback
-                    onPress={this.handleLinkPress}
-                >
+                <TouchableWithoutFeedback onPress={this.handleLinkPress}>
                     <View
                         style={[
                             styles.smallContainer,
                             this.props.urlOnlyTouchContainerStyle,
                         ]}
                     >
-                        <Text
-                            style={[
-                                styles.url,
-                                this.props.urlStyle,
-                            ]}
-                        >
-                                {this.props.data.url ? this.props.data.url.toLowerCase() : ''}
+                        <Text style={[styles.url, this.props.urlStyle]}>
+                            {this.props.data.url
+                                ? this.props.data.url.toLowerCase()
+                                : ''}
                         </Text>
                     </View>
                 </TouchableWithoutFeedback>
@@ -208,27 +191,16 @@ export default class OpenGraphDisplay extends Component {
         }
 
         return (
-            <View
-                style={[
-                    styles.opengraphWithIcon,
-                    this.props.containerStyle,
-                ]}
-            >
+            <View style={[styles.opengraphWithIcon, this.props.containerStyle]}>
                 {opengraph}
-                {this.props.onIconPress
-                    ? <TouchableWithoutFeedback
-                        onPress={this.props.onIconPress}
-                    >
+                {this.props.onIconPress ? (
+                    <TouchableWithoutFeedback onPress={this.props.onIconPress}>
                         <Image
                             source={this.props.iconSource}
-                            style={[
-                                styles.iconStyle,
-                                this.props.iconStyle,
-                            ]}
+                            style={[styles.iconStyle, this.props.iconStyle]}
                         />
                     </TouchableWithoutFeedback>
-                    : null
-                }
+                ) : null}
             </View>
         );
     }
