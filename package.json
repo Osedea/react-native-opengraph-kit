@@ -23,22 +23,21 @@
   },
   "homepage": "https://github.com/Osedea/react-native-opengraph-kit#readme",
   "dependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-osedea": "^2.3.3",
+    "eslint": "^6.7.1",
+    "eslint-config-osedea": "^5.0.0",
     "html-entities": "~1.2.0",
-    "lodash.debounce": "~4.0.8",
-    "proptypes": "^1.1.0"
+    "lodash.debounce": "~4.0.8"
   },
   "devDependencies": {
     "babel": "^6.23.0",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-react-native": "^2.0.0",
-    "chai": "^4.0.2",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-react-native": "^4.0.1",
+    "chai": "^4.2.0",
     "isomorphic-fetch": "^2.2.1",
-    "mocha": "^3.4.2",
-    "react": "15.0.2",
-    "react-native": "0.26.2"
+    "mocha": "^6.2.2",
+    "react": "16.9.0",
+    "react-native": "0.61.5"
   }
 }

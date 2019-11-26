@@ -1,3 +1,4 @@
+// @flow
 /**
  *
  * @namespace Oseadea.Components.OpenGraph
@@ -20,9 +21,7 @@ import {
     StyleSheet,
     Text,
     TouchableWithoutFeedback,
-    ViewPropTypes,
 } from 'react-native';
-import PropTypes from 'proptypes';
 
 const colors = {
     defaultBackgroundColor: '#EEEEEE',
@@ -79,28 +78,28 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class OpenGraphDisplay extends Component {
-    static propTypes = {
-        containerStyle: ViewPropTypes.style,
-        descriptionStyle: Text.propTypes.style,
-        data: PropTypes.shape({
-            url: PropTypes.string,
-            image: PropTypes.string,
-            title: PropTypes.string,
-            description: PropTypes.string,
-        }).isRequired,
-        iconSource: Image.propTypes.source,
-        iconStyle: Image.propTypes.style,
-        imageStyle: Image.propTypes.style,
-        onIconPress: PropTypes.func,
-        textContainerStyle: ViewPropTypes.style,
-        touchContainerStyle: ViewPropTypes.style,
-        titleStyle: Text.propTypes.style,
-        urlStyle: Text.propTypes.style,
-        urlOnlyContainerStyle: ViewPropTypes.style,
-        urlOnlyTouchContainerStyle: ViewPropTypes.style,
-    };
+type Props = {
+    containerStyle: StyleSheet,
+    descriptionStyle: StyleSheet,
+    data: {
+        url: String,
+        image: String,
+        title: String,
+        description: String,
+    },
+    iconSource?: Number | String,
+    iconStyle: StyleSheet,
+    imageStyle: StyleSheet,
+    onIconPress: Function,
+    textContainerStyle: StyleSheet,
+    touchContainerStyle: StyleSheet,
+    titleStyle: StyleSheet,
+    urlStyle: StyleSheet,
+    urlOnlyContainerStyle: StyleSheet,
+    urlOnlyTouchContainerStyle: StyleSheet,
+};
 
+export default class OpenGraphDisplay extends Component<Props> {
     static defaultProps = {
         iconSource: require('./close.png'),
     };

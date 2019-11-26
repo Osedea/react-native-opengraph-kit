@@ -1,16 +1,18 @@
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
+ *
+ * @format
  * @flow
  */
 
 import React, { Component } from 'react';
 import {
-  Platform,
+  SafeAreaView,
   StyleSheet,
+  View,
   Text,
   TextInput,
-  View
 } from 'react-native';
 import { OpenGraphAwareInput, OpenGraphDisplay, OpenGraphParser } from 'react-native-opengraph-kit';
 
@@ -36,31 +38,33 @@ export default class Example extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>OpenGraphAwareInput</Text>
-                <OpenGraphAwareInput
-                    showIcon
-                    containerStyle={styles.textInput}
-                />
-                <Text style={styles.title}>Using OpenGraphParser with normal TextInput</Text>
-                <TextInput
-                    style={styles.textInput}
-                    onChange={this.handleTextChange}
-                />
-                <Text style={styles.title}>OpenGraphDisplay</Text>
-                {this.state.data.map((meta, i) =>
-                    <OpenGraphDisplay
-                        data={meta}
+            <SafeAreaView>
+                <View style={styles.container}>
+                    <Text style={styles.title}>OpenGraphAwareInput</Text>
+                    <OpenGraphAwareInput
+                        showIcon
+                        containerStyle={styles.textInput}
                     />
-                )}
-            </View>
+                    <Text style={styles.title}>Using OpenGraphParser with normal TextInput</Text>
+                    <TextInput
+                        style={styles.textInput}
+                        onChange={this.handleTextChange}
+                    />
+                    <Text style={styles.title}>OpenGraphDisplay</Text>
+                    {this.state.data.map((meta, i) =>
+                        <OpenGraphDisplay
+                            key={meta}
+                            data={meta}
+                        />
+                    )}
+                </View>
+            </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-  container: {
-        flex: 1,
+    container: {
         paddingTop: 50,
         padding: 10,
     },

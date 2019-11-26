@@ -1,6 +1,6 @@
+// @flow
 import React, { Component } from 'react';
-import { StyleSheet, TextInput, View, ViewPropTypes } from 'react-native';
-import PropTypes from 'proptypes';
+import { StyleSheet, TextInput, View } from 'react-native';
 import debounce from 'lodash.debounce';
 
 import OpenGraphDisplay from './OpenGraphDisplay';
@@ -14,37 +14,30 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class OpenGraphAwareInput extends Component {
-    static propTypes = {
-        containerStyle: ViewPropTypes.style,
-        debounceDelay: PropTypes.number,
-        iconSource: OpenGraphDisplay.propTypes.iconSource,
-        iconStyle: OpenGraphDisplay.propTypes.iconStyle,
-        onChange: PropTypes.func,
-        onIconPress: PropTypes.func,
-        showIcon: PropTypes.bool,
-        textInputStyle: TextInput.propTypes.style,
-        resultLimit: PropTypes.number,
-    };
+type Props = {
+    debounceDelay?: Number,
+    resultLimit?: Number,
+    showIcon?: boolean,
+    containerStyle: StyleSheet,
+    textInputStyle: StyleSheet,
+    onIconPress: Function,
+    iconSource: Number | String,
+    iconStyle: StyleSheet,
+};
 
+type State = {
+    openGraphData: Array<*>,
+};
+
+export default class OpenGraphAwareInput extends Component<Props, State> {
     static defaultProps = {
         debounceDelay: 300,
-        showIcon: false,
         resultLimit: 1,
+        showIcon: false,
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            openGraphData: [],
-        };
-    }
-
-    handleDismissOpengraph = () => {
-        this.setState({
-            openGraphData: [],
-        });
+    state = {
+        openGraphData: [],
     };
 
     extractMetaAndSetState = debounce((text) => {
@@ -62,6 +55,12 @@ export default class OpenGraphAwareInput extends Component {
             }
         });
     }, this.props.debounceDelay);
+
+    handleDismissOpengraph = () => {
+        this.setState({
+            openGraphData: [],
+        });
+    };
 
     handleTextInputChange = (event) => {
         const text = event.nativeEvent.text;
