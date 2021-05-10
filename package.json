@@ -1,6 +1,6 @@
 {
   "name": "react-native-opengraph-kit",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A set of components and utils useful to extract opengraph data directly from your react-native app",
   "main": "index.js",
   "scripts": {
