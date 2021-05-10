@@ -73,24 +73,28 @@ export default class OpenGraphAwareInput extends Component<Props, State> {
             0,
             this.props.resultLimit
         );
+
+        const { containerStyle, iconStyle, iconSource, onIconPress, showIcon, textInputStyle, ...rest } = this.props;
+
         return (
-            <View style={[styles.container, this.props.containerStyle]}>
+            <View style={[styles.container, containerStyle]}>
                 <TextInput
                     onChange={this.handleTextInputChange}
-                    style={[styles.input, this.props.textInputStyle]}
+                    style={[styles.input, textInputStyle]}
+                    {...rest}
                 />
                 {ogDataToDisplay.map((meta, i) => (
                     <OpenGraphDisplay
                         key={i}
                         data={meta}
                         onIconPress={
-                            this.props.showIcon
-                                ? this.props.onIconPress
+                            showIcon
+                                ? onIconPress
                                   || this.handleDismissOpengraph
                                 : null
                         }
-                        iconSource={this.props.iconSource}
-                        iconStyle={this.props.iconStyle}
+                        iconSource={iconSource}
+                        iconStyle={iconStyle}
                     />
                 ))}
             </View>
