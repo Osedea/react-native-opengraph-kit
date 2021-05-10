@@ -40,7 +40,7 @@ export default class OpenGraphAwareInput extends Component<Props, State> {
         openGraphData: [],
     };
 
-    extractMetaAndSetState = debounce((text) => {
+    extractMetaAndSetState = debounce((text, event) => {
         OpenGraphParser.extractMeta(text).then((data) => {
             const customEvent = {};
 
@@ -65,7 +65,7 @@ export default class OpenGraphAwareInput extends Component<Props, State> {
     handleTextInputChange = (event) => {
         const text = event.nativeEvent.text;
 
-        this.extractMetaAndSetState(text);
+        this.extractMetaAndSetState(text, event);
     };
 
     render() {
